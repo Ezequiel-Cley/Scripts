@@ -45,31 +45,31 @@ r = requests.post(url=apiUrl, json=data, headers=headers) # make request
 
 #Condição de validação se conexão com API foi um Sucesso
 if r.status_code == 200:
-    print('Conexão com a API foi um Sucesso!!!')
-    # Usando o json_normalize para transformar os dados em um DataFrame
-    df = pd.json_normalize(r.json(), record_path=['data', 'boards', 'items','column_values'], 
-                        meta=[['data', 'boards', 'items','name'],['data', 'boards', 'name'],['data', 'boards', 'name', 'id'] ])
+    print('Conexão com a API foi um Sucesso!!!')
+    # Usando o json_normalize para transformar os dados em um DataFrame
+    df = pd.json_normalize(r.json(), record_path=['data', 'boards', 'items','column_values'], 
+    meta=[['data', 'boards', 'items','name'],['data', 'boards', 'name'],['data', 'boards', 'name', 'id'] ])
 else:
-    print("Falha na Atualização de Relatório, Erro: Status de conexão com a API {r.status_code}")
-    # Mensagem que você deseja enviar
-    mensagem = f"Falha na Atualização de Relatório DP, Erro: Status de conexão com a API {r.status_code}"
-    # Enviar a mensagem desejada
-    # Cria uma função assicronica para Enviar_mensagem():
-    async def enviar_foto():
-        await bot.send_message(chat_id=GRUPO, text=mensagem)
-    # chama a função assíncrona usando asyncio
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(enviar_foto()) 
-    exit()
-    
+    print("Falha na Atualização de Relatório, Erro: Status de conexão com a API {r.status_code}")
+    # Mensagem que você deseja enviar
+    mensagem = f"Falha na Atualização de Relatório DP, Erro: Status de conexão com a API {r.status_code}"
+    # Enviar a mensagem desejada
+    # Cria uma função assicronica para Enviar_mensagem():
+    async def enviar_foto():
+        await bot.send_message(chat_id=GRUPO, text=mensagem)
+    # chama a função assíncrona usando asyncio
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(enviar_foto()) 
+    exit()
+  
 # Organiza as colunas para realizar a alteração de linhas para colunas!!!
 df = df[['data.boards.name.id','data.boards.name','data.boards.items.name', 'title', 'text']]
 
 # Realiza a troca dos nomes das colunas para melhor entedimento da Base
 df.rename(columns={'data.boards.name.id': 'ID',
-                   'data.boards.name': 'Quadro',
-                   'data.boards.items.name': 'Elemento'   
-                   }, inplace = True)
+                   'data.boards.name': 'Quadro',
+                   'data.boards.items.name': 'Elemento'},
+          inplace = True)
 
 # Use a função pivot para transformar os dados de linhas para colunas mantendo as colunas (ID,Quadro e Elemento)
 df_pivot = df.pivot(index=['ID', 'Quadro', 'Elemento'], columns='title', values='text').reset_index()
@@ -85,7 +85,7 @@ data_atual = str(datetime.date.today())
 # Caminho para salvar o arquivo Historico do dia > DEVIDO TER LIMITAÇÃO DE EXTRAÇÃO POR PAGINA A API, É ARMAZENANDO UM HISTORICO DIARIAMENTE 
 Caminho = (f'//DISCO/LOCAL/DO/ARQUIVO/HISTORICO_{data_atual}.parquet')
 
-# Salva o arquivo historico para Incluisão de novos dados e dados antigos:
+# Salva o arquivo historico para Inclusão de novos dados e dados antigos:
 df_pivot.to_parquet(Caminho, index=False)
 
 # Buscar todos os arquivos de uma diretorio
@@ -99,31 +99,31 @@ df_Historica = pd.DataFrame()
 
 # Criando Loop para acessar todos os arquivos do diretorio e unifica-los
 for i in arquivos:
-    path = f'{pasta}/{i}'
-    df_path = pd.read_parquet(f'{path}')
-    df_Historica = pd.concat([df_Historica, df_path])
-    
+ path = f'{pasta}/{i}'
+ df_path = pd.read_parquet(f'{path}')
+ df_Historica = pd.concat([df_Historica, df_path])
+ 
 # Unificando as bases de dados Historicas com a extraida atual pela API
 df = pd.concat([df_Historica,df_pivot])
 
 # Remover as duplicadas entre o arquivo historico e Datframe novo extraido pela API
 df.drop_duplicates(subset=['ID'], ignore_index=True, inplace= True)
-    
+ 
 # Realizado a alteração do Tipo da Coluna Data
 df['Tempo Estimado'] = pd.to_numeric(df['Tempo Estimado'])
 # Criando uma função para criar uma nova coluna com tempo em segundo
 def tempo_segundo(Col):
-    Col = (Col * 60)
-    Col = (Col * 60)
-    return Col
+ Col = (Col * 60)
+ Col = (Col * 60)
+ return Col
 
 # Aplicando a função para a nova coluna para obter os dados em Segundos
 df['Tempo_Estimado_Seg'] = df['Tempo Estimado'].apply(tempo_segundo)
 
 # Criando Coluna com a data Atual
 def data_hora_atual(Col):
-    Col = str(datetime.datetime.today())
-    return Col
+ Col = str(datetime.datetime.today())
+ return Col
 df['Data_Atual'] = ''
 df['Data_Atual'] = df['Data_Atual'].apply(data_hora_atual)
 
@@ -137,7 +137,7 @@ mensagem = f"Relatório de Acompanhamento de Rotinas DP Atualizado com Sucesso"
 #Enviar_mensagem():
 # Cria uma função assicronica para Enviar_mensagem():
 async def enviar_foto():
-    await bot.send_message(chat_id=GRUPO, text=mensagem)
+ await bot.send_message(chat_id=GRUPO, text=mensagem)
 
 # chama a função assíncrona usando asyncio
 loop = asyncio.get_event_loop()
