@@ -20,7 +20,7 @@ database = 'Nome_do_Banco_que_Deseja_Se_Conectar'
 username = 'Nome_de_Usuario_Para_Conexão'
 
 # String de conexão com autenticação do Windows
-connection_string  = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};Trusted_Connection=yes;'
+connection_string = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};Trusted_Connection=yes;'
 
 # Conectando ao banco de dados
 conn = pyodbc.connect(connection_string)
@@ -44,20 +44,20 @@ dados['VALOR_IMPRODUTIVO'] = dados.apply(lambda row: dados.loc[row.name, 'VALOR_
 
 # Realizado o Agrupamento da Minha Base para criação da minha Base
 Base_01 = dados.groupby(['CONTRATANTE','OPERADOR']).agg(
-    #Soma Trabalhado
-    TRABALHADO = ('TRABALHADO','sum'),
-    #Soma Produtivo
-    PRODUTIVO = ('PRODUTIVO','sum'),
-    #Soma Promessa
-    PROMESSA = ('PROMESSA','sum'),
-    #Soma Valor_Produtivo
-    VALOR_PRODUTIVO = ('VALOR_PRODUTIVO', 'sum'),
-    # Soma Valor_Promessa
-    VALOR_PROMESSA = ('VALOR_PROMESSA', 'sum'),
-    #Soma Improdutivo
-    IMPRODUTIVO = ('IMPRODUTIVO','sum'),
-    # Soma Valor_Promessa
-    VALOR_IMPRODUTIVO = ('VALOR_IMPRODUTIVO', 'sum')
+    #Soma Trabalhado
+    TRABALHADO = ('TRABALHADO','sum'),
+    #Soma Produtivo
+    PRODUTIVO = ('PRODUTIVO','sum'),
+    #Soma Promessa
+    PROMESSA = ('PROMESSA','sum'),
+    #Soma Valor_Produtivo
+    VALOR_PRODUTIVO = ('VALOR_PRODUTIVO', 'sum'),
+    # Soma Valor_Promessa
+    VALOR_PROMESSA = ('VALOR_PROMESSA', 'sum'),
+    #Soma Improdutivo
+    IMPRODUTIVO = ('IMPRODUTIVO','sum'),
+    # Soma Valor_Promessa
+    VALOR_IMPRODUTIVO = ('VALOR_IMPRODUTIVO', 'sum')
 ).reset_index()
 
 # Calculando o Porcentual Produtivo
@@ -91,8 +91,8 @@ dados_i = dados.loc[dados['IMPRODUTIVO'] == 1]
 
 # Realizado a Agrupamento para criação da 2 Base
 Base_02 = dados_p.groupby(['CONTRATANTE','DESCRICAO']).agg(
-    QTDE = ('TRABALHADO','count'),
-    VALOR = ('VALOR_TOTAL', 'sum')
+    QTDE = ('TRABALHADO','count'),
+    VALOR = ('VALOR_TOTAL', 'sum')
 ).reset_index()
 
 # Mudado para 3 casas decimais
@@ -100,8 +100,8 @@ Base_02['VALOR'] = Base_02['VALOR'].apply(lambda valor: f'R$ {valor:,.2f}')
 
 # Realizado a Agrupamento para criação da 3 Base
 Base_03 = dados_i.groupby(['CONTRATANTE','DESCRICAO']).agg(
-    QTDE = ('TRABALHADO','count'),
-    VALOR = ('VALOR_TOTAL', 'sum')
+    QTDE = ('TRABALHADO','count'),
+    VALOR = ('VALOR_TOTAL', 'sum')
 ).reset_index()
 
 # Mudado para 3 casas decimais
@@ -125,13 +125,13 @@ tab = table(ax, Base_01, loc='center', cellLoc='center', colWidths=col_widths)
 # Personalizando o estilo da tabela
 tab.auto_set_font_size(False)
 tab.set_fontsize(12)
-tab.scale(2.2, 2.2)  # Ajuste o tamanho da tabela conforme necessário
+tab.scale(2.2, 2.2) # Ajuste o tamanho da tabela conforme necessário
 # Personalizando células específicas
 for i in range(len(Base_01.columns)):
-    tab.get_celld()[0, i].set_facecolor("#33BC14")  # Fundo amarelo para a primeira linha (cabeçalho)
-    tab.get_celld()[0, i].set_fontsize(14)  # Tamanho de fonte maior para o cabeçalho
-    tab.get_celld()[0, i].set_text_props(weight='bold')  # Texto em negrito para o cabeçalho
-    # ... Continue personalizando outras células, como bordas, cores de fundo, cores de texto, etc.
+    tab.get_celld()[0, i].set_facecolor("#33BC14") # Fundo amarelo para a primeira linha (cabeçalho)
+    tab.get_celld()[0, i].set_fontsize(14) # Tamanho de fonte maior para o cabeçalho
+    tab.get_celld()[0, i].set_text_props(weight='bold') # Texto em negrito para o cabeçalho
+    # ... Continue personalizando outras células, como bordas, cores de fundo, cores de texto, etc.
 # Salvando a figura como uma imagem
 plt.savefig(r'\\DISCO\LOCAL\ONDE\DESEJA\SALVAR\IMAGEM\tabela_imagem_1.png', bbox_inches='tight', pad_inches=0.5)
 #plt.show()
@@ -150,22 +150,22 @@ pads = [100,0]
 titulos = ["Acionamentos Produtivos", "Acionamentos Improdutivos"]
 # Loop para criar as duas tabelas
 for i, ax in enumerate(axes):
-    # Removendo eixos
-    ax.axis('off')
-    # Adicionando um título à tabela
-    ax.set_title(titulos[i], fontsize=14, fontweight='bold', pad=pads[i])
-    # Criando uma tabela com os dados do DataFrame
-    tab = table(ax, bases[i], loc='center', cellLoc='center', colWidths=col_widths)
-    # Personalizando o estilo da tabela (se necessário)
-    tab.auto_set_font_size(False)
-    tab.set_fontsize(12)
-    tab.scale(2.2, 2.2)  # Ajuste o tamanho da tabela conforme necessário
-    # Personalizando células específicas (se necessário)
-    for j in range(len(bases[i].columns)):
-        tab.get_celld()[0, j].set_facecolor("#33BC14")  # Fundo Verde para a primeira linha (cabeçalho)
-        tab.get_celld()[0, j].set_fontsize(14)  # Tamanho de fonte maior para o cabeçalho
-        tab.get_celld()[0, j].set_text_props(weight='bold')  # Texto em negrito para o cabeçalho
-        # ... Continue personalizando outras células, como bordas, cores de fundo, cores de texto, etc.
+    # Removendo eixos
+    ax.axis('off')
+    # Adicionando um título à tabela
+    ax.set_title(titulos[i], fontsize=14, fontweight='bold', pad=pads[i])
+    # Criando uma tabela com os dados do DataFrame
+    tab = table(ax, bases[i], loc='center', cellLoc='center', colWidths=col_widths)
+    # Personalizando o estilo da tabela (se necessário)
+    tab.auto_set_font_size(False)
+    tab.set_fontsize(12)
+    tab.scale(2.2, 2.2) # Ajuste o tamanho da tabela conforme necessário
+    # Personalizando células específicas (se necessário)
+    for j in range(len(bases[i].columns)):
+        tab.get_celld()[0, j].set_facecolor("#33BC14") # Fundo Verde para a primeira linha (cabeçalho)
+        tab.get_celld()[0, j].set_fontsize(14) # Tamanho de fonte maior para o cabeçalho
+        tab.get_celld()[0, j].set_text_props(weight='bold') # Texto em negrito para o cabeçalho
+        # ... Continue personalizando outras células, como bordas, cores de fundo, cores de texto, etc.
 # Ajustando o espaço entre os subplots
 plt.subplots_adjust(hspace=0.7)
 # Salvando a figura como uma imagem (opcional)
@@ -190,13 +190,13 @@ caminho_imagem_2 = r'\\DISCO\LOCAL\ONDE\DESEJA\SALVAR\IMAGEM\tabela_imagem_2.png
 
 # define uma função assíncrona para enviar a foto 1
 async def enviar_foto():
-    with open(caminho_imagem_1, 'rb') as imagem:
-        await bot.send_photo(chat_id=GRUPO, photo=InputFile(imagem))
+    with open(caminho_imagem_1, 'rb') as imagem:
+        await bot.send_photo(chat_id=GRUPO, photo=InputFile(imagem))
 
 # define uma função assíncrona para enviar a foto 2 
 async def enviar_foto2():
-    with open(caminho_imagem_2, 'rb') as imagem:
-        await bot.send_photo(chat_id=GRUPO, photo=InputFile(imagem))
+    with open(caminho_imagem_2, 'rb') as imagem:
+        await bot.send_photo(chat_id=GRUPO, photo=InputFile(imagem))
 
 # chama a função assíncrona usando asyncio 1
 loop = asyncio.get_event_loop()
