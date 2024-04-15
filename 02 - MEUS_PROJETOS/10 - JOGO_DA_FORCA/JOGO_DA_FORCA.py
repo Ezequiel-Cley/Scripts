@@ -116,16 +116,10 @@ def game(palavra, opções, dica):
     
     print("\nBem-Vindo(a) ao jogo da forca!")
     print("Adivinhe a Palavra Abaixo: \n")
-    
-    #opção = list(opções.values())  # Obtém uma lista dos valores do dicionário
-    #dicas = list(definir.keys()) # Obtém as Chaves do dicionário
-    
-    for i,j in opções.items():
-        if dica == j:
-            print(f"Dica: A palavra é um(a) {i}  \n")
+
     
     #Escolhendo Aleortariamente uma palavra
-    palavra = random.choice(palavra)
+    palavra = random.choice(palavra).upper()
     
     # Cria o tabuleiro com o caracter "_" multiplicado pelo comprimento da palavra
     tabuleiro = ["_"] * len(palavra)
@@ -141,6 +135,10 @@ def game(palavra, opções, dica):
     
     while chances > 0:
         
+        for i,j in opções.items():
+            if dica == j:
+                print(f"Dica: A palavra é um(a) {i}  \n")
+        
         # Print
         print(display_hangman(chances))
         #print("Palavra: ", tabuleiro)
@@ -152,7 +150,7 @@ def game(palavra, opções, dica):
         print("\n Letras erradas: "," ".join(letras_erradas))
         
         # Tentativa
-        tentativa = input("\n Digite uma letra: ").lower()
+        tentativa = input("\n Digite uma letra: ").upper()
         
         # Condicional para descoberta de palavras
         if tentativa in palavra:
@@ -166,7 +164,9 @@ def game(palavra, opções, dica):
             print("\nVocê já tentou essa letra. Escolha outra!")
             chances -= 1
             letras_erradas.append(tentativa)
-            
+
+        limpa_tela()
+        
         # Condicional em caso de Vitoria
         if "_" not in letras_descobertas:
             print("\n Voçê venceu, a palavra descoberta é", palavra)
