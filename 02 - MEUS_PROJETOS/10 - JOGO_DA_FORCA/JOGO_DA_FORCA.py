@@ -117,7 +117,6 @@ def game(palavra, opções, dica):
     print("\nBem-Vindo(a) ao jogo da forca!")
     print("Adivinhe a Palavra Abaixo: \n")
 
-    
     #Escolhendo Aleortariamente uma palavra
     palavra = random.choice(palavra).upper()
     
@@ -175,6 +174,7 @@ def game(palavra, opções, dica):
     # Condicional em caso de Derrota
     if "_" in letras_descobertas:
         print("\n Você perdeu, a palavra era", palavra)
+
 
 # bloco main
 if __name__ == "__main__":
