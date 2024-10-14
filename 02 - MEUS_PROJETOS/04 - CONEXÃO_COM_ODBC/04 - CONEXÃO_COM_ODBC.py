@@ -26,7 +26,29 @@ connection_string = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATAB
 conn = pyodbc.connect(connection_string)
 
 # Sua consulta SQL
-query = "SELECT CONVERT(DATE, TDA.DATA_INCLUSAO) AS DATA, TDA.DEVEDOR_ID, TC.FANTASIA AS CONTRATANTE, TDA.USUARIO_INCLUSAO AS OPERADOR, TD.DESCRICAO, case when TD.SE_DISCADOR = 's' then 1 else 0 end as 'TRABALHADO', case when TD.SE_PRODUTIVO = 's' then 1 else 0 end as 'PRODUTIVO', case when TD.SE_PRODUTIVO = 's' then 0 else 1 end as 'IMPRODUTIVO', case when TD.SE_PROMESSA = 's' then 1 else 0 end as 'PROMESSA', COLUNA_VALOR.VALOR_TOTAL FROM tbdevedor_acionamento TDA WITH(NOLOCK) INNER JOIN tbacao_cobranca TD WITH(NOLOCK) ON TD.ACAO_ID = TDA.ACAO_ID INNER JOIN tbcontratante TC WITH(NOLOCK) ON TC.CONTRATANTE_ID = TDA.CONT_ID INNER JOIN ( SELECT T2.DEVEDOR_ID, SUM(T2.VALOR) VALOR_TOTAL FROM tbtitulo T2 WITH(NOLOCK) WHERE T2.CONT_ID IN ('192','93','200') GROUP BY T2.DEVEDOR_ID) COLUNA_VALOR ON COLUNA_VALOR.DEVEDOR_ID = TDA.DEVEDOR_ID WHERE TDA.CONT_ID IN ('192','93','200') AND CONVERT(DATE, TDA.DATA_INCLUSAO) = '2023-09-25' AND DATEPART(HOUR, TDA.DATA_INCLUSAO) <=  DATEPART(HOUR, GETDATE())"
+query = """SELECT 
+            CONVERT(DATE, TDA.DATA_INCLUSAO) AS DATA,
+            TDA.DEVEDOR_ID, TC.FANTASIA AS CONTRATANTE,
+            TDA.USUARIO_INCLUSAO AS OPERADOR,
+            TD.DESCRICAO,
+            case when TD.SE_DISCADOR = 's' then 1 else 0 end as 'TRABALHADO',
+            case when TD.SE_PRODUTIVO = 's' then 1 else 0 end as 'PRODUTIVO',
+            case when TD.SE_PRODUTIVO = 's' then 0 else 1 end as 'IMPRODUTIVO',
+            case when TD.SE_PROMESSA = 's' then 1 else 0 end as 'PROMESSA',]
+            COLUNA_VALOR.VALOR_TOTAL 
+        FROM tbdevedor_acionamento TDA WITH(NOLOCK) 
+        INNER JOIN tbacao_cobranca TD WITH(NOLOCK) ON TD.ACAO_ID = TDA.ACAO_ID 
+        INNER JOIN tbcontratante TC WITH(NOLOCK) ON TC.CONTRATANTE_ID = TDA.CONT_ID 
+        INNER JOIN ( SELECT T
+                        2.DEVEDOR_ID, 
+                        SUM(T2.VALOR) VALOR_TOTAL 
+                        FROM tbtitulo T2 WITH(NOLOCK) 
+                        WHERE T2.CONT_ID IN ('192','93','200') 
+                        GROUP BY T2.DEVEDOR_ID) COLUNA_VALOR ON COLUNA_VALOR.DEVEDOR_ID = TDA.DEVEDOR_ID 
+        WHERE TDA.CONT_ID IN ('192','93','200') 
+        AND CAST(TDA.DATA_INCLUSAO AS DATE) = GETDATE()
+        AND DATEPART(HOUR, TDA.DATA_INCLUSAO) <=  DATEPART(HOUR, GETDATE())
+        """
 
 # Executando a consulta e criando um DataFrame diretamente
 dados = pd.read_sql(query, conn)
