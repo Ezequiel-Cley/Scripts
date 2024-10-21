@@ -13,7 +13,7 @@ from urllib.request import urlopen
 
 
 # Lendo os dados
-Base_Dados = pd.read_csv('./assets/Dados_tratados_Enem.csv')
+Base_Dados = pd.read_csv(r'C:\Users\ezequ\Scripts\01 - APRENDIZADOS\02 - PROJETOS_CRIADOS_EM_AULAS\01 - Projeto+Enem\assets\Dados_tratados_Enem.csv')
 
 ### ### ### ###
   ### Mapa ###
