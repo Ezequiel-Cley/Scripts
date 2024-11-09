@@ -1,0 +1,35 @@
+/* Questão a ser Resolvida 
+1 - Considerando o banco de dados proposto, escreva uma query que traga o segundo filme
+mais alugado por cada categoria de filme a partir de 2005-06-15, retornando apenas os
+campos de nome de categoria do filme, título do filme e frequência (quantidade) de vezes
+que o filme foi alugado. Na hipótese de empate entre quantidade de vezes que o filme foi
+alugado para uma mesma posição na ordenação dos filmes por categoria, o título do filme 
+deve ser usado como critério de desempate, em ordem ascendente.
+*/
+
+/* Criando uma Tabela Temporaria(CTE) para armazenar as inforamções do Rank e Frequencia cada Filme por Categoria */
+WITH FilmeAluguel_Rankeado AS (
+	SELECT 
+		C.name AS Categoria,
+		F.title as Titulo,
+    	count(DISTINCT R.rental_id) as Frequencia, -- Contando de forma distinta os alugeis realizados
+          ROW_NUMBER() OVER ( -- Enumerado para criaçaõ de ranking
+            PARTITION BY C.name -- Enumeração sendo criada por cada Categoria
+          ORDER by count(DISTINCT R.rental_id) DESC, F.title ASC) AS Rank -- Realizado ordenação para considerar a mais alugada e por titulo de forma crescente 
+	FROM rental R
+	inner join inventory I on I.inventory_id = R.inventory_id -- Cruzamento para Extração do inventorio de filmes 
+	inner join film F on F.film_id = I.film_id -- Cruzamento para extração dos dados do Filme
+	inner join film_category FC on F.film_id = FC.film_id -- Cruzamento para Extração da categorias de cada filme
+	inner join category C on C.category_id = FC.category_id -- Cruzamento para extração do nome das categorias do filme
+	where r.rental_date >= '2005-06-15' -- Filtrando tudo que for maior que a data (2005-06-15)
+	group by C.name, F.title  -- Agrupando colunas para realizar contagem distinct
+)
+
+/* Query para chamar a CTE e realizar a filtragem do rank desejado */
+SELECT 
+    Categoria,
+    Titulo,
+    Frequencia
+FROM FilmeAluguel_Rankeado
+WHERE Rank = 2; -- Fazendo o Filtro do segundo filme mais alugado
+
