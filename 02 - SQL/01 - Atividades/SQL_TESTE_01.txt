@@ -15,12 +15,12 @@ WITH FilmeAluguel_Rankeado AS (
     	count(DISTINCT R.rental_id) as Frequencia, -- Contando de forma distinta os alugeis realizados
           ROW_NUMBER() OVER ( -- Enumerado para criaçaõ de ranking
             PARTITION BY C.name -- Enumeração sendo criada por cada Categoria
-          ORDER by count(DISTINCT R.rental_id) DESC, F.title ASC) AS Rank -- Realizado ordenação para considerar a mais alugada e por titulo de forma crescente 
-	FROM rental R
-	inner join inventory I on I.inventory_id = R.inventory_id -- Cruzamento para Extração do inventorio de filmes 
-	inner join film F on F.film_id = I.film_id -- Cruzamento para extração dos dados do Filme
-	inner join film_category FC on F.film_id = FC.film_id -- Cruzamento para Extração da categorias de cada filme
-	inner join category C on C.category_id = FC.category_id -- Cruzamento para extração do nome das categorias do filme
+          ORDER by count(DISTINCT R.rental_id) DESC, F.title ASC) AS Ranking -- Realizado ordenação para considerar a mais alugada e por titulo de forma crescente 
+	FROM sakila.rental R
+	inner join sakila.inventory I on I.inventory_id = R.inventory_id -- Cruzamento para Extração do inventorio de filmes 
+	inner join sakila.film F on F.film_id = I.film_id -- Cruzamento para extração dos dados do Filme
+	inner join sakila.film_category FC on F.film_id = FC.film_id -- Cruzamento para Extração da categorias de cada filme
+	inner join sakila.category C on C.category_id = FC.category_id -- Cruzamento para extração do nome das categorias do filme
 	where r.rental_date >= '2005-06-15' -- Filtrando tudo que for maior que a data (2005-06-15)
 	group by C.name, F.title  -- Agrupando colunas para realizar contagem distinct
 )
@@ -31,5 +31,5 @@ SELECT
     Titulo,
     Frequencia
 FROM FilmeAluguel_Rankeado
-WHERE Rank = 2; -- Fazendo o Filtro do segundo filme mais alugado
+WHERE Ranking = 2; -- Fazendo o Filtro do segundo filme mais alugado
 
