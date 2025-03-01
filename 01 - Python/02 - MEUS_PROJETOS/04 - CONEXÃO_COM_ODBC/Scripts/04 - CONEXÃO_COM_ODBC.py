@@ -132,7 +132,6 @@ Base_03['VALOR'] = Base_03['VALOR'].apply(lambda valor: f'R$ {valor:,.2f}')
 
 # Criando Imagem da Primeira Tabela
 
-
 # Criando uma figura e eixo vazios
 fig, ax = plt.subplots(figsize=(10, 6))
 # Tamanhos personalizados das colunas (em proporção)
@@ -160,7 +159,6 @@ plt.savefig(r'\\DISCO\LOCAL\ONDE\DESEJA\SALVAR\IMAGEM\tabela_imagem_1.png', bbox
 
 
 # Criando uma figura com dois subplots, uma coluna e duas linhas
-
 
 fig, axes = plt.subplots(2, 1, figsize=(12, 8))
 # Tamanhos personalizados das colunas (em proporção)
