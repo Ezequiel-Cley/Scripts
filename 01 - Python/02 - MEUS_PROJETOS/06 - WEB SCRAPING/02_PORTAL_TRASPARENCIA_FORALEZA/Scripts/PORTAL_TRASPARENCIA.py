@@ -13,11 +13,11 @@ service = Service(EdgeChromiumDriverManager().install())
 # Configurar as opções do Edge
 options = webdriver.EdgeOptions()
 options.add_experimental_option("prefs", {
-    "download.default_directory": r'C:\Users\ezequ\OneDrive\Documentos\PROJETOS_POWER_BI_P\PORTAL_TRASPARENCIA',
+    "download.default_directory": r'C:\Users\ezequ\Scripts\01 - Python\02 - MEUS_PROJETOS\06 - WEB SCRAPING\02_PORTAL_TRASPARENCIA_FORALEZA\Datasets',
     "download.prompt_for_download": False,
     "download.directory_upgrade": True,
     "safebrowsing.enabled": True})
-options.add_argument("--incognito")
+options.add_argument("--headles")
 
 # Iniciar o navegador Chrome
 print("Abrindo Navegador")
